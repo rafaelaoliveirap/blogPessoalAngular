@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PostagemService } from '../service/postagem.service';
 import { Postagem } from '../model/Postagem';
+import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
@@ -9,54 +11,98 @@ import { Postagem } from '../model/Postagem';
 })
 export class FeedComponent implements OnInit {
 
-  key = 'data'
-  reverse = true
+  nome: string = localStorage.getItem('nome');
+  
+  key = 'data';
+  reverse = true;
 
-  listaPostagens: Postagem[]
-  postagem: Postagem = new Postagem
+  listaPostagens: Postagem[];
 
-  alerta:boolean = false
+  postagem: Postagem = new Postagem;
+  id: number;
 
-  titulo: string
+  novo = false;
+  titulo: string;
+  pesquisa: boolean = false
+  alerta = false;
 
-  constructor(private postagemService: PostagemService) { }
+  constructor(
+    private postagemService: PostagemService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private locationPage: Location) { }
 
-  ngOnInit(): void {
-    this.findallPostagens()
-    window.scroll(0,0)
+  ngOnInit() {
 
-    let item: string = localStorage.getItem('delOk')
+    let token = localStorage.getItem('token');
 
-    if (item == "true"){
+    if(token == null){
+      alert('Faça o login antes de acessar a página de feed')
+      this.router.navigate(['/login']);
+    }
+
+    let item:string = localStorage.getItem('delOk')
+
+    if(item == "true"){
       this.alerta = true
-      localStorage.clear()
-
+      localStorage.removeItem('delOk')
+      // Depois de 3 segundos a pagina vai ser atualizada
       setTimeout(()=>{
-        location.assign('/feed')
+        this.refresh() 
+      }, 3000)
 
-      }, 3000);
-
+    }
+    var id: number = this.route.snapshot.params["id"];
+    if (this.id == undefined) {
+      console.log('Não preciso do ID agora!');
+    } else {
+      this.findById(id);
     }
 
   }
 
-  findallPostagens() {
+  findAllPostagens() {
     this.postagemService.getAllPostagens().subscribe((resp: Postagem[]) => {
-      this.listaPostagens = resp
+      this.listaPostagens = resp;
+    });
+  }
+
+  findById(id: number) {
+    this.postagemService.getByIdPostagem(id).subscribe((resp: Postagem) => {
+      this.postagem = resp;
+    }, err => {
+      console.log( 'Não preciso do ID para nada agora.' );
     });
   }
 
   publicar() {
     this.postagemService.postPostagem(this.postagem).subscribe((resp: Postagem) => {
-      this.postagem = resp
-      location.assign('/feed')
+      this.postagem = resp;
+      this.refresh();
     });
   }
 
-  pesquisarPorTitulo(){
-    this.postagemService.findByTitulo(this.titulo).subscribe((resp: Postagem[])=>{
-      this.listaPostagens = resp 
+
+  findByNamePostagem() {
+    this.postagemService.findByTitulo(this.titulo).subscribe((resp: Postagem[]) => {
+      console.log(resp);
+      this.listaPostagens = resp;
+      this.pesquisa = true;
+    }, err => {
+      console.log(err);
     });
   }
 
+  closeAlert() {
+    localStorage.clear();
+  }
+
+  refresh(){
+
+    this.router.navigateByUrl('/lista-post', {skipLocationChange: true})
+    .then(()=>{
+      this.router.navigate([this.locationPage.path()])
+    });
+  }
 }
+

@@ -27,31 +27,36 @@
 
                     <hr class="mt-4 mb-4">
 
-                    <h6 class="mb-3 text-monospace text-center">Pesquisar por título.</h6>
+                    <h6 class="mb-3 text-monospace text-center">Pesquisar por título</h6>
 
-                    <input type="text" class="form-control mb-3 w-100" placeholder="Pesquisar postagem" [(ngModel)] = "titulo">
+                    <input type="text" class="form-control mb-3 w-100" placeholder="Pesquisar postagem" [(ngModel)]='titulo'>
 
-                    <button class="btn btn-outline-warning w-100" type="button" (click) = pesquisarPorTitulo()>Pesquisar</button>
+                    <button class="btn btn-outline-warning w-100" type="button" (click)=findByNamePostagem()>Pesquisar</button>
 
                 </div>
             </div>
+
         </div>
 
-        <div class="col-md-7">
+
+        <div class="col-md-8">
 
             <div>
-                <h3 class="text-center mb-4 text-monospa">Como tem sido a experiência na Generation?</h3>
+                <h3 class="text-center mb-4 text-monospace">Como tem sido minha experiência na Generation?</h3>
+
 
                 <div class="form-group">
+
                     <label for="titulo" class="text-monospace">Título</label>
-                    <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Digite seu titulo"
-                        [(ngModel)]="postagem.titulo">
+                    <input type="text" name="titulo" id="titulo" class="form-control mb-3" placeholder="Digite seu titulo" [(ngModel)]="postagem.titulo">
+
                 </div>
+
                 <div class="form-group">
-                    <label for="texto" c3ass="text-monospace">Texto</label>
-                    <textarea name="texto" id="texto" cols="30" rows="4" class="form-control"
-                        placeholder="Digite seu texto" [(ngModel)]="postagem.texto">
-                    </textarea>
+
+                    <label for="texto" class="text-monospace">Texto</label>
+                    <textarea name="texto" id="texto" cols="30" rows="4" class="form-control" placeholder="Digite seu texto" [(ngModel)]="postagem.texto"></textarea>
+
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -59,44 +64,66 @@
                 </div>
             </div>
 
-            <hr class="mt-5 mb-5">
+            <div class="mb-5" *ngIf="alerta">
+                <div class="alert alert-success fade show" role="alert">
+                    Postagem apagada com sucesso!
+                <button type="button" class="close" (click)="closeAlert()" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
 
-            <h3 class="text-monospace text-center">Minhas Postagens</h3>
-
-            <div *ngIf = 'alerta'>
-
-            <div class="alert alert-success" role="alert">
-                Postagem deletada com sucesso!
-              </div>
+                </div>
             </div>
+            
+            <div *ngIf='pesquisa; else listaPadrao'>
 
-            <div class="card mb-4" *ngFor='let postagem of listaPostagens | orderBy : key : reverse'>
+                <h3 class="text-monospace text-center mb-5">Minhas postagens</h3>
 
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h5 class="card-title">{{ postagem.titulo}}</h5>
+                <div class="card mb-4" *ngFor='let postagem of listaPostagens | orderBy: key: reverse'>
+
+
+                    <div class="card-header">
+                        <div class="row">
+
+                            <div class="col-md-8">
+                                <h5>{{postagem.titulo}}</h5>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-info mr-3" [routerLink]="['/editar',postagem.id]">
+                    Editar</button>
+
+                                <button class="btn btn-outline-danger" [routerLink]="['/deletar', postagem.id]">
+                    Apagar</button>
+                            </div>
+
+
                         </div>
 
-                        <div class="col-md-4 d-flex justify-content-end">
-                            <button class="btn btn-outline-info mr-3" [routerLink]="['/editar', postagem.id]">
-                                Editar
-                            </button>
-
-                            <button class="btn btn-outline-danger" [routerLink]="['/deletar', postagem.id]">
-                                Apagar
-                            </button>
-                        </div>
 
                     </div>
+
+
+                    <div class="card-body">
+                        <p class="card-text">{{postagem.texto}}</p>
+
+                        <small id="texto" class="form-text m-0 text-muted mb-3 text-monospace">
+                         Postagem em {{postagem.date | date: 'dd/MM/yyyy'}}
+                         às {{postagem.date | date: 'HH:mm'}}
+                        </small>
+
+                    </div>
+
                 </div>
-                <div class="card-body">
-                    <p class="card-text">{{ postagem.texto}}</p>
-                    <small class="form-text m-0 text-muted mb-3 text-monospace"> Postado em
-                        {{postagem.data | date: 'dd/MM/yyyy'}} às {{postagem.data | date: 'HH:mm'}} 
-                    </small>
-                </div>
+
             </div>
+            
+            <ng-template #listaPadrao>
+                <app-lista-post></app-lista-post>
+            </ng-template>
+
         </div>
+
     </div>
+
 </div>

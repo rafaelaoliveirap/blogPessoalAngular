@@ -21,10 +21,24 @@
           </li>
 
           <li class="nav-item ">
-            <a class="nav-link texto p-3 text-uppercase text-monospace font-weight-bold" routerLink='/feed'>Feed</a>
+            <a class="nav-link texto p-3 border-right text-uppercase text-monospace font-weight-bold" routerLink='/feed'>Feed</a>
           </li>
-
+          
+          <li class="nav-item ">
+            <a class="nav-link texto p-3 text-uppercase text-monospace font-weight-bold" routerLink='/cadastrar'>Cadastrar</a>
+          </li>
+          <div *ngIf = 'auth.btnLogin()'>
+            <li class="nav-item ">
+              <a class="nav-link texto p-3 ml-5 text-monospace font-weight-bold" (click)="exibirLogin()" routerLink="/login">entrar</a>
+            </li>
+          </div>
+          <div *ngIf='auth.btnSair()'>
+          <li class="nav-item ">
+            <a class="nav-link texto p-3 ml-5 text-monospace font-weight-bold" (click)= "sair()">sair</a>
+          </li>
+          </div>
         </ul>
+
   
   
         

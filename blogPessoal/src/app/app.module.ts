@@ -12,7 +12,12 @@ import { HttpClientModule } from  '@angular/common/http'
 import { FormsModule } from '@angular/forms'
 import { OrderModule } from 'ngx-order-pipe';
 import { EditarComponent } from './editar/editar.component';
-import { DeletarComponent } from './deletar/deletar.component'
+import { DeletarComponent } from './deletar/deletar.component';
+import { LoginComponent } from './login/login.component';
+import { CadastroComponent } from './cadastro/cadastro.component';
+import { ListaPostComponent } from './lista-post/lista-post.component';
+import { PutPostagemComponent } from './put-postagem/put-postagem.component';
+import { DeletarPostagemComponent } from './deletar-postagem/deletar-postagem.component'
 
 
 @NgModule({
@@ -23,7 +28,12 @@ import { DeletarComponent } from './deletar/deletar.component'
     NavbarComponent,
     FooterComponent,
     EditarComponent,
-    DeletarComponent
+    DeletarComponent,
+    LoginComponent,
+    CadastroComponent,
+    ListaPostComponent,
+    PutPostagemComponent,
+    DeletarPostagemComponent
   ],
   imports: [
     BrowserModule,
